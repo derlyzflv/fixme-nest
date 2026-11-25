@@ -1,3 +1,4 @@
+
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsInt,
@@ -19,7 +20,10 @@ export class CreateLibroDto {
   @IsNotEmpty()
   isbn!: string;
 
-  @ApiProperty({ example: 1967 })
+  @ApiProperty({ example: 1967, minimum: 1450, maximum: 2100 })
+  @IsInt()
+  @Min(1450)
+  @Max(2100)
   anioPublicacion!: number;
 
   @ApiProperty({ example: 3, description: 'Ejemplares disponibles' })

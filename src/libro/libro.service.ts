@@ -1,3 +1,4 @@
+
 import {
   ConflictException,
   Injectable,
@@ -15,27 +16,42 @@ export class LibroService {
     const autor = await this.prisma.autor.findUnique({
       where: { id: data.autorId },
     });
+
     if (!autor) {
-      throw new NotFoundException(`El autor ${data.autorId} no existe`);
+      throw new NotFoundException(
+        `El autor ${data.autorId} no existe`,
+      );
     }
+
     const categoria = await this.prisma.categoria.findUnique({
-      where: { id: data.autorId },
+      where: { id: data.categoriaId },
     });
+
     if (!categoria) {
-      throw new NotFoundException(`La categoría ${data.categoriaId} no existe`);
+      throw new NotFoundException(
+        `La categoría ${data.categoriaId} no existe`,
+      );
     }
+
     const repetido = await this.prisma.libro.findUnique({
       where: { isbn: data.isbn },
     });
+
     if (repetido) {
-      throw new ConflictException(`Ya existe un libro con ISBN ${data.isbn}`);
+      throw new ConflictException(
+        `Ya existe un libro con ISBN ${data.isbn}`,
+      );
     }
+
     return this.prisma.libro.create({ data });
   }
 
   findAll(categoriaId?: number) {
-    return this.prisma.libros.findMany({
-      where: { categoriaId },
+    return this.prisma.libro.findMany({
+      where:
+        categoriaId !== undefined
+          ? { categoriaId }
+          : {},
       orderBy: { titulo: 'asc' },
       include: { autor: true, categoria: true },
     });
@@ -46,19 +62,66 @@ export class LibroService {
       where: { id },
       include: { autor: true, categoria: true },
     });
+
     if (!libro) {
-      throw new NotFoundException(`El libro ${id} no existe`);
+      throw new NotFoundException(
+        `El libro ${id} no existe`,
+      );
     }
+
     return libro;
   }
 
   async update(id: number, data: UpdateLibroDto) {
     await this.findOne(id);
-    return this.prisma.libro.update({ where: { id }, data });
+
+    if (data.autorId !== undefined) {
+      const autor = await this.prisma.autor.findUnique({
+        where: { id: data.autorId },
+      });
+
+      if (!autor) {
+        throw new NotFoundException(
+          `El autor ${data.autorId} no existe`,
+        );
+      }
+    }
+
+    if (data.categoriaId !== undefined) {
+      const categoria = await this.prisma.categoria.findUnique({
+        where: { id: data.categoriaId },
+      });
+
+      if (!categoria) {
+        throw new NotFoundException(
+          `La categoría ${data.categoriaId} no existe`,
+        );
+      }
+    }
+
+    if (data.isbn !== undefined) {
+      const repetido = await this.prisma.libro.findUnique({
+        where: { isbn: data.isbn },
+      });
+
+      if (repetido && repetido.id !== id) {
+        throw new ConflictException(
+          `Ya existe un libro con ISBN ${data.isbn}`,
+        );
+      }
+    }
+
+    return this.prisma.libro.update({
+      where: { id },
+      data,
+    });
   }
 
   async remove(id: number) {
     await this.findOne(id);
-    return this.prisma.libro.delete({ where: { id } });
+
+    return this.prisma.libro.delete({
+      where: { id },
+    });
   }
 }
