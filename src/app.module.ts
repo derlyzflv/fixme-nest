@@ -15,8 +15,9 @@ import { PrestamoModule } from './prestamo/prestamo.module.js';
     CategoriaModule,
     LibroModule,
     SocioModule,
+    PrestamoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

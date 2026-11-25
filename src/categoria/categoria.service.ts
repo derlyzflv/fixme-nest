@@ -9,7 +9,7 @@ import { UpdateCategoriaDto } from './dto/update-categoria.dto.js';
 
 @Injectable()
 export class CategoriaService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(data: CreateCategoriaDto) {
     const existe = await this.prisma.categoria.findUnique({
