@@ -14,7 +14,7 @@ import { UpdateSocioDto } from './dto/update-socio.dto.js';
 
 @Controller('socios')
 export class SocioController {
-  constructor(private readonly socioService: SocioService) {}
+  constructor(private readonly socioService: SocioService) { }
 
   @Post()
   create(@Body() createSocioDto: CreateSocioDto) {
@@ -24,6 +24,7 @@ export class SocioController {
   @Get()
   findAll() {
     return this.socioService.findAll();
+  }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {

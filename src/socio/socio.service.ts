@@ -9,7 +9,7 @@ import { UpdateSocioDto } from './dto/update-socio.dto.js';
 
 @Injectable()
 export class SocioService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(data: CreateSocioDto) {
     const existe = await this.prisma.socio.findUnique({
@@ -23,7 +23,7 @@ export class SocioService {
 
   findAll() {
     return this.prisma.socio.findMany({
-      where: { activo: false },
+      where: { activo: true },
       orderBy: { id: 'asc' },
     });
   }
