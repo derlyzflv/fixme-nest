@@ -6,4 +6,6 @@ export class CreateCategoriaDto {
   @IsString()
   @IsNotEmpty()
   nombre!: string;
+  
+  
 }
