@@ -1,3 +1,4 @@
+
 import {
   Body,
   Controller,
@@ -26,11 +27,15 @@ export class LibroController {
   @Get()
   @ApiQuery({ name: 'categoriaId', required: false, type: Number })
   findAll(@Query('categoriaId') categoriaId?: string) {
-    return this.libroService.findAll(Number(categoriaId));
+    const idCategoria = categoriaId
+      ? Number(categoriaId)
+      : undefined;
+
+    return this.libroService.findAll(idCategoria);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.libroService.findOne(id);
   }
 
